@@ -8,13 +8,24 @@ const totalDisplay = document.getElementById("total");
 const resetBtn = document.getElementById("resetBtn");
 
 
+async function getCaloriesFromAPI(foodName) {
+  try {
+    const response = await fetch(
+      `https://api.edamam.com/api/food-database/v2/parser?ingr=${foodName}`
+    );
 
-async function getCalories(foodName) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(Math.floor(Math.random() * 500));
-    }, 500);
-  });
+    const data = await response.json();
+
+    const calories =
+      data.parsed?.[0]?.food?.nutrients?.ENERC_KCAL || 100;
+
+    return calories;
+
+  } catch (error) {
+    console.log(error);
+    alert("Failed to fetch calorie data!");
+    return 0;
+  }
 }
 
 
