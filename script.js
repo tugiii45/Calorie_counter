@@ -34,6 +34,7 @@ function displayFoods() {
 
     li.innerHTML = `
       ${food.name} - ${food.calories} cal
+      <button onclick="editFood(${index})">Edit</button>
       <button onclick="removeFood(${index})">X</button>
     `;
 
