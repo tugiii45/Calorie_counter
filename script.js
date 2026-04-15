@@ -68,11 +68,12 @@ function displayFoods() {
 }
 
 // Add food
-addBtn.addEventListener("click", () => {
+addBtn.addEventListener("click", async () => {
   const name = foodName.value.trim();
-  const cal = parseInt(calories.value);
 
-  if (!name || isNaN(cal)) return;
+  if (!name) return;
+
+  const cal = await getCaloriesFromAPI(name);
 
   foods.push({ name, calories: cal });
 
