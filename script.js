@@ -14,20 +14,29 @@ async function getCaloriesFromAPI(foodName) {
       `https://api.edamam.com/api/food-database/v2/parser?ingr=${foodName}`
     );
 
+    if (!response.ok) {
+      throw new Error("Network response error");
+    }
+
     const data = await response.json();
 
     const calories =
-      data.parsed?.[0]?.food?.nutrients?.ENERC_KCAL || 100;
+      data.parsed?.[0]?.food?.nutrients?.ENERC_KCAL;
 
-    return calories;
+    if (!calories) {
+      throw new Error("No calorie data found");
+    }
+
+    return Math.round(calories);
 
   } catch (error) {
-    console.log(error);
-    alert("Failed to fetch calorie data!");
-    return 0;
+    console.log("Error:", error.message);
+
+    alert("Could not fetch real data. Using default calories.");
+
+    return 100; // fallback value
   }
 }
-
 
 // Convert the item back to an object
 
