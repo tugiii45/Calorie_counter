@@ -16,7 +16,7 @@ async function getCaloriesFromAPI(foodName) {
   try {
     // WARNING: API key is exposed in client-side code. Consider using a backend proxy for security.
     const response = await fetch(
-      `https://api.edamam.com/api/food-database/v2/parser?ingr=${foodName}&app_id=yeettugi&app_key=6dL3Dxikx5@riZN`
+      `https://api.edamam.com/api/food-database/v2/parser?ingr=${encodeURIComponent(foodName)}&app_id=yeettugi&app_key=6dL3Dxikx5@riZN`
     );
 
     if (!response.ok) {
