@@ -1,5 +1,8 @@
-// We start by first getting the Elements
+// Calorie Counter App Script
+// This script handles adding, editing, and removing food items.
+// It fetches calorie data from an API and saves data locally.
 
+// Get HTML elements
 const foodName = document.getElementById("foodName");
 const calories = document.getElementById("calories");
 const addBtn = document.getElementById("addBtn");
@@ -7,7 +10,8 @@ const foodList = document.getElementById("foodList");
 const totalDisplay = document.getElementById("total");
 const resetBtn = document.getElementById("resetBtn");
 
-
+// Function to get calorie data from API
+// Function to get calorie data from API
 async function getCaloriesFromAPI(foodName) {
   try {
     // WARNING: API key is exposed in client-side code. Consider using a backend proxy for security.
@@ -19,78 +23,72 @@ async function getCaloriesFromAPI(foodName) {
       throw new Error("Network response error");
     }
 
-
-    // Convert response to usable data
-
+    // Parse the JSON response
     const data = await response.json();
 
-    // Extract calories safely
+    // Get calorie value from the data
     const calories =
       data.parsed?.[0]?.food?.nutrients?.ENERC_KCAL;
 
-      // Handle missing calorie data
+    // If no calories found, throw error
     if (!calories) {
       throw new Error("No calorie data found");
     }
 
-    // Return clean value as in Rounds off the number to the nearest integer and returns it.
+    // Round to nearest whole number and return
     return Math.round(calories);
 
-
-  // Catch block (error handling)
-  // Logs error in console for debugging
   } catch (error) {
+    // Log error for debugging
     console.log("Error:", error.message);
 
-    // User-friendly message
+    // Show user-friendly message
     alert("Could not fetch real data. Using default calories.");
 
-    return 100; // fallback value
+    // Return default value
+    return 100;
   }
 }
 
-// Convert the item back to an object
-
+// Load saved food data from localStorage or start empty
 let foods = JSON.parse(localStorage.getItem("foods")) || [];
 
-// Display function
+// Function to display foods and update total
 function displayFoods() {
-  
-// Clear old list
+  // Clear the current list
   foodList.innerHTML = "";
 
-  // Temporary variable to calculate total
+  // Start total at 0
   let total = 0;
 
-  // Loop through foods
+  // Loop through each food item
   foods.forEach((food, index) => {
 
-    // Keeps adding each food’s calories
+    // Add calories to total
     total += food.calories;
 
-    // Create list item
+    // Create a list item element
     const li = document.createElement("li");
 
-    // Add content + buttons to list item
-
+    // Set the content with name, calories, and buttons
     li.innerHTML = `
       ${food.name} - ${food.calories} cal
       <button onclick="editFood(${index})">Edit</button>
       <button onclick="removeFood(${index})">X</button>
     `;
 
-    // Add to page
+    // Add the item to the page
     foodList.appendChild(li);
   });
 
-  // Update total display
+  // Show the total calories
   totalDisplay.textContent = total;
 
-  // Save data
+  // Save the data to localStorage
   localStorage.setItem("foods", JSON.stringify(foods));
 }
 
-// Add food (with API)
+// Event listener for adding food
 addBtn.addEventListener("click", async () => {
   const name = foodName.value.trim();
 
@@ -99,42 +97,52 @@ addBtn.addEventListener("click", async () => {
     return;
   }
 
-  // Get calories from API
+  // Fetch calories from API
   const cal = await getCaloriesFromAPI(name);
 
+  // Add to foods array
   foods.push({ name, calories: cal });
 
-  // Clear inputs
+  // Clear input fields
   foodName.value = "";
   calories.value = "";
 
+  // Update display
   displayFoods();
 });
 
-// Removes 1 item at that index
+// Function to remove a food item
 function removeFood(index) {
+  // Remove the item from the array
   foods.splice(index, 1);
+  // Update display
   displayFoods();
 }
 
-// Edit food
+// Function to edit a food item
 async function editFood(index) {
+  // Ask user for new food name
   const newName = prompt("Enter new food name:", foods[index].name);
 
   if (!newName || !newName.trim()) return;
 
+  // Fetch new calories from API
   const newCal = await getCaloriesFromAPI(newName);
 
+  // Update the food item
   foods[index] = { name: newName.trim(), calories: newCal };
 
+  // Update display
   displayFoods();
 }
 
-// Reset all
+// Event listener for resetting all foods
 resetBtn.addEventListener("click", () => {
+  // Clear the foods array
   foods = [];
+  // Update display
   displayFoods();
 });
 
-// Load on start
+// Load and display foods when page starts
 displayFoods();
