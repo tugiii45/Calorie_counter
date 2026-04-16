@@ -11,7 +11,7 @@ const resetBtn = document.getElementById("resetBtn");
 async function getCaloriesFromAPI(foodName) {
   try {
     const response = await fetch(
-      `https://api.edamam.com/api/food-database/v2/parser?ingr=${foodName}`
+      `https://api.edamam.com/api/food-database/v2/parser?ingr=${foodName}&app_id=YOUR_ID&app_key=YOUR_KEY`
     );
 
     if (!response.ok) {
