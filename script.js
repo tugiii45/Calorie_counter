@@ -78,10 +78,17 @@ function displayFoods() {
 
   if (!newName) return;
 
-  getCaloriesFromAPI(newName).then((newCal) => {
-    foods[index] = { name: newName, calories: newCal };
-    displayFoods();
-  });
+ async function editFood(index) {
+  const newName = prompt("Enter new food name:", foods[index].name);
+
+  if (!newName || !newName.trim()) return;
+
+  const newCal = await getCaloriesFromAPI(newName);
+
+  foods[index] = { name: newName.trim(), calories: newCal };
+
+  displayFoods();
+}
 }
 
     li.innerHTML = `
