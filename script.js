@@ -71,6 +71,19 @@ function displayFoods() {
     const li = document.createElement("li");
 
     // Add content + buttons to list item
+
+
+  function editFood(index) {
+  const newName = prompt("Enter new food name:", foods[index].name);
+
+  if (!newName) return;
+
+  getCaloriesFromAPI(newName).then((newCal) => {
+    foods[index] = { name: newName, calories: newCal };
+    displayFoods();
+  });
+}
+
     li.innerHTML = `
       ${food.name} - ${food.calories} cal
       <button onclick="editFood(${index})">Edit</button>
