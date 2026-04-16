@@ -10,8 +10,9 @@ const resetBtn = document.getElementById("resetBtn");
 
 async function getCaloriesFromAPI(foodName) {
   try {
+    // WARNING: API key is exposed in client-side code. Consider using a backend proxy for security.
     const response = await fetch(
-      `https://api.edamam.com/api/food-database/v2/parser?ingr=${foodName}&app_id=YOUR_ID&app_key=YOUR_KEY`
+      `https://api.edamam.com/api/food-database/v2/parser?ingr=${foodName}&app_id=yeettugi&app_key=6dL3Dxikx5@riZN`
     );
 
     if (!response.ok) {
@@ -72,25 +73,6 @@ function displayFoods() {
 
     // Add content + buttons to list item
 
-
-  function editFood(index) {
-  const newName = prompt("Enter new food name:", foods[index].name);
-
-  if (!newName) return;
-
- async function editFood(index) {
-  const newName = prompt("Enter new food name:", foods[index].name);
-
-  if (!newName || !newName.trim()) return;
-
-  const newCal = await getCaloriesFromAPI(newName);
-
-  foods[index] = { name: newName.trim(), calories: newCal };
-
-  displayFoods();
-}
-}
-
     li.innerHTML = `
       ${food.name} - ${food.calories} cal
       <button onclick="editFood(${index})">Edit</button>
@@ -112,7 +94,10 @@ function displayFoods() {
 addBtn.addEventListener("click", async () => {
   const name = foodName.value.trim();
 
-  if (!name) return;
+  if (!name) {
+    alert("Please enter a food name.");
+    return;
+  }
 
   // Get calories from API
   const cal = await getCaloriesFromAPI(name);
@@ -129,6 +114,19 @@ addBtn.addEventListener("click", async () => {
 // Removes 1 item at that index
 function removeFood(index) {
   foods.splice(index, 1);
+  displayFoods();
+}
+
+// Edit food
+async function editFood(index) {
+  const newName = prompt("Enter new food name:", foods[index].name);
+
+  if (!newName || !newName.trim()) return;
+
+  const newCal = await getCaloriesFromAPI(newName);
+
+  foods[index] = { name: newName.trim(), calories: newCal };
+
   displayFoods();
 }
 
