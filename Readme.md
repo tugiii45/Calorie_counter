@@ -17,10 +17,10 @@ The Calorie Counter App is a simple web application that helps users track their
 ##  Technologies Used
 - HTML5
 - CSS3
-- JavaScript (ES6+)
+- JavaScript 
 - DOM Manipulation
 - localStorage
-- Fetch API (simulation)
+- Fetch API 
 
 ##  Setup Instructions
 
